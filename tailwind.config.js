@@ -43,6 +43,10 @@ module.exports = {
         primary: "#FAFAFA",
         secColor: "#efefef",
         navColor: "#BEBEBE",
+        highlight: "#03ffff",
+      },
+      borderColor: {
+        primary: "#03ffff",
       },
       backgroundColor: {
         mainColor: "#FBF8F9",
@@ -52,8 +56,8 @@ module.exports = {
       keyframes: {
         "slide-in": {
           "0%": {
-            "-webkit-transform": "translateX(-200px)",
-            transform: "translateX(-200px)",
+            "-webkit-transform": "translateX(-600px)",
+            transform: "translateX(-600px)",
           },
           "100%": {
             "-webkit-transform": "translateX(0px)",
