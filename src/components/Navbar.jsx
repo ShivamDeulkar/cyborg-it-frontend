@@ -8,7 +8,7 @@ const Navbar = ({ searchTerm, setSearchTerm, user }) => {
   if (!user) return null;
   return (
     <div className="flex gap-2 md:gap-5 w-full md:mt-5 mt-0 pd-7 ">
-      <div className="flex justify-start items-center w-full px-2 md:bg-gray-800 bg-gray-700   rounded-lg  border-none outline-none focus-within:shadow-sm">
+      <div className="flex justify-start items-center w-full px-2 md:bg-gray-800 bg-gray-700   rounded-md border-none outline-none focus-within:shadow-sm">
         <IoMdSearch fontSize={21} className=" md:ml-1" />
         <input
           type="text"
@@ -26,14 +26,11 @@ const Navbar = ({ searchTerm, setSearchTerm, user }) => {
         >
           <img
             src={user.image}
-            alt="user-profile-pic"
-            className=" w-full  rounded-md"
+            alt="user-profile-image"
+            className=" w-full  rounded-full"
             referrerPolicy="no-referrer"
           />
         </Link>
-        <div className="hidden md:block">
-          <AddPinBtn />
-        </div>
       </div>
     </div>
   );

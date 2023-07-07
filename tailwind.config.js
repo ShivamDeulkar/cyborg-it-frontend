@@ -65,6 +65,14 @@ module.exports = {
             transform: "translateX(0px)",
           },
         },
+        "fade-in": {
+          "0%": {
+            backdropFilter: "blur(0px)",
+          },
+          "100%": {
+            backdropFilter: "blur(10px)",
+          },
+        },
 
         "slide-fwd": {
           "0%": {
@@ -79,6 +87,7 @@ module.exports = {
       },
       animation: {
         "slide-in": "slide-in 0.5s ease-out",
+        "fade-in": "fade-in 0.5s ease-out",
         "slide-fwd":
           " slide-fwd 0.45s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
       },

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { AiOutlineCloseCircle, AiOutlineMenu } from "react-icons/ai";
+import { AiOutlineMenu } from "react-icons/ai";
 import { Link, Route, Routes } from "react-router-dom";
 
 import { Sidebar, UserProfile } from "../components";
@@ -48,22 +48,14 @@ const Home = () => {
           <Link to={`user-profile/${user?._id}`}>
             <img
               src={user?.image}
-              alt="logo"
+              alt="user-profile-image"
               referrerPolicy="no-referrer"
-              className=" w-16"
+              className=" w-12 rounded-full"
             />
           </Link>
         </div>
         {toggleSidebar && (
-          <div className="fixed top-0 left-0 w-5/6 h-screen bg-white   overflow-y-auto shadow-md z-10 animate-slide-in">
-            <div className="absolute w-full  flex justify-end items-center p-3">
-              <AiOutlineCloseCircle
-                fontSize={30}
-                className="cursor-pointer text-highlight  "
-                onClick={() => setToggleSidebar(false)}
-              />
-            </div>
-            {/* <div className="h-full w-full bg-transparent"></div> */}
+          <div className="fixed top-0 left-0 w-full h-screen overflow-y-auto  z-10 ">
             <Sidebar user={user && user} closeToggle={setToggleSidebar} />
           </div>
         )}
@@ -74,7 +66,7 @@ const Home = () => {
           <Route path="/*" element={<Pins user={user && user} />} />
         </Routes>
       </div>
-      <div className=" absolute bottom-5 right-5 block md:hidden">
+      <div className=" absolute bottom-5 right-5 block ">
         <AddPinBtn />
       </div>
     </div>
