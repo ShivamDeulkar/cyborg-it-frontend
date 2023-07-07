@@ -6,6 +6,7 @@ import { RiHomeFill } from "react-icons/ri";
 import logo from "../assets/logo.png";
 import Navbar from "./Navbar";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { IoMdSearch } from "react-icons/io";
 
 const isNotActiveStyle =
   "flex items-center px-5 p-2 gap-3 text-gray-500 hover:text-gray-200 transition-all duration-200 ease-in-out capitalize";
@@ -18,6 +19,11 @@ const categories = [
   { name: "Photography" },
   { name: "Gaming" },
   { name: "Coding" },
+  { name: "Coding" },
+  { name: "Coding" },
+  { name: "Coding" },
+  { name: "Coding" },
+
   { name: "Other" },
 ];
 
@@ -40,10 +46,10 @@ const Sidebar = ({ user, closeToggle }) => {
         style={{ backdropFilter: "blur(10px)" }}
       ></div>
       <div
-        className=" absolute md:static top-0 flex flex-col justify-between bg-gray-800 w-5/6  h-full overflow-y-scroll min-w-210 hide-scrollbar animate-slide-in"
+        className=" absolute md:static top-0 flex flex-col justify-between  bg-gray-800 w-5/6  h-full overflow-y-scroll min-w-210 hide-scrollbar animate-slide-in"
         style={{ opacity: 0.99 }}
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col ">
           <Link
             to="/"
             className="flex px-5 gap-2 mt-3 mb-2 pt-1 w-190 items-center"
@@ -52,9 +58,13 @@ const Sidebar = ({ user, closeToggle }) => {
             <img src={logo} alt="logo" />
           </Link>
           <div className="block md:hidden px-3 mb-1">
-            <Navbar user={user && user} />
+            {/* <Navbar user={user && user} /> */}
+            <div className=" bg-gray-700 px-2 py-2 flex">
+              <IoMdSearch fontSize={21} className=" md:ml-1" />
+              <div>Search</div>
+            </div>
           </div>
-          <div className="flex flex-col gap-5 ">
+          <div className="flex flex-col gap-2 md:gap-5 ">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -68,7 +78,7 @@ const Sidebar = ({ user, closeToggle }) => {
             <h3 className="mt-2 px-5 text-lg 2xl:text-xl text-gray-400">
               Discover categories
             </h3>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 overflow-scroll hXl:h-685  hLg:h-510   hMd:h-72 hSm:h-56  hXs:h-44 hXxs:h-32 h-24">
               {categories.slice(0, categories.length - 1).map((category) => (
                 <NavLink
                   to={`category/${category.name}`}

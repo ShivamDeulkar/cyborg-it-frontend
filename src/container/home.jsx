@@ -55,7 +55,8 @@ const Home = () => {
           </Link>
         </div>
         {toggleSidebar && (
-          <div className="fixed top-0 left-0 w-full h-screen overflow-y-auto  z-10 ">
+          // overflow removed
+          <div className="fixed top-0 left-0 w-full h-screen   z-10 ">
             <Sidebar user={user && user} closeToggle={setToggleSidebar} />
           </div>
         )}

@@ -94,6 +94,14 @@ module.exports = {
       transitionProperty: {
         height: "height",
       },
+      screens: {
+        hXxs: { raw: "(min-height: 460px)," },
+        hXs: { raw: "(min-height: 510px)," },
+        hSm: { raw: "(min-height: 560px)," },
+        hMd: { raw: "(min-height: 620px)," },
+        hLg: { raw: "(min-height: 820px)," },
+        hXl: { raw: "(min-height: 1020px)," },
+      },
     },
     cursor: {
       "zoom-in": "zoom-in",
