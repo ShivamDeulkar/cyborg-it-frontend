@@ -1,9 +1,10 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { RiHomeFill } from "react-icons/ri";
-import { IoIosArrowForward } from "react-icons/io";
+// import { IoIosArrowForward } from "react-icons/io";
 
 import logo from "../assets/logo.png";
+import Navbar from "./Navbar";
 
 const isNotActiveStyle =
   "flex items-center px-5 p-2 gap-3 text-gray-500 hover:text-gray-200 transition-all duration-200 ease-in-out capitalize";
@@ -29,11 +30,14 @@ const Sidebar = ({ user, closeToggle }) => {
       <div className="flex flex-col">
         <Link
           to="/"
-          className="flex px-5 gap-2 mt-3 mb-3 pt-1 w-190 items-center"
+          className="flex px-5 gap-2 mt-3 mb-2 pt-1 w-190 items-center"
           onClick={handleCloseSidebar}
         >
           <img src={logo} alt="logo" />
         </Link>
+        <div className="block md:hidden px-3 mb-1">
+          <Navbar user={user && user} />
+        </div>
         <div className="flex flex-col gap-5 ">
           <NavLink
             to="/"

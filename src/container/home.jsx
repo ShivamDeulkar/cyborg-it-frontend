@@ -7,18 +7,19 @@ import { client } from "../client";
 import Pins from "./Pins";
 import { userQuery } from "../utils/data";
 import logo from "../assets/logo.png";
+import AddPinBtn from "../components/AddPinBtn";
 
 const Home = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const [user, setUser] = useState(null);
   const scrollRef = useRef(null);
 
-  const userInfo =
-    localStorage.getItem("user") !== "undefined"
-      ? JSON.parse(localStorage.getItem("user"))
-      : localStorage.clear();
-
   useEffect(() => {
+    const userInfo =
+      localStorage.getItem("user") !== "undefined"
+        ? JSON.parse(localStorage.getItem("user"))
+        : localStorage.clear();
+
     const query = userQuery(userInfo?.sub);
     client.fetch(query).then((data) => {
       setUser(data[0]);
@@ -62,6 +63,7 @@ const Home = () => {
                 onClick={() => setToggleSidebar(false)}
               />
             </div>
+            {/* <div className="h-full w-full bg-transparent"></div> */}
             <Sidebar user={user && user} closeToggle={setToggleSidebar} />
           </div>
         )}
@@ -71,6 +73,9 @@ const Home = () => {
           <Route path="/user-profile/:userId" element={<UserProfile />} />
           <Route path="/*" element={<Pins user={user && user} />} />
         </Routes>
+      </div>
+      <div className=" absolute bottom-5 right-5 block md:hidden">
+        <AddPinBtn />
       </div>
     </div>
   );
