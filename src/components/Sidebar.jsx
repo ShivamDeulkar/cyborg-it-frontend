@@ -1,12 +1,9 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { RiHomeFill } from "react-icons/ri";
-// import { IoIosArrowForward } from "react-icons/io";
 
 import logo from "../assets/logo.png";
-import Navbar from "./Navbar";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import { IoMdSearch } from "react-icons/io";
 
 const isNotActiveStyle =
   "flex items-center px-5 p-2 gap-3 text-gray-500 hover:text-gray-200 transition-all duration-200 ease-in-out capitalize";
@@ -19,11 +16,6 @@ const categories = [
   { name: "Photography" },
   { name: "Gaming" },
   { name: "Coding" },
-  { name: "Coding" },
-  { name: "Coding" },
-  { name: "Coding" },
-  { name: "Coding" },
-
   { name: "Other" },
 ];
 
@@ -57,13 +49,6 @@ const Sidebar = ({ user, closeToggle }) => {
           >
             <img src={logo} alt="logo" />
           </Link>
-          <div className="block md:hidden px-3 mb-1">
-            {/* <Navbar user={user && user} /> */}
-            <div className=" bg-gray-700 px-2 py-2 flex">
-              <IoMdSearch fontSize={21} className=" md:ml-1" />
-              <div>Search</div>
-            </div>
-          </div>
           <div className="flex flex-col gap-2 md:gap-5 ">
             <NavLink
               to="/"
@@ -103,7 +88,7 @@ const Sidebar = ({ user, closeToggle }) => {
             <img
               src={user.image}
               className=" w-10 h-10  rounded-full"
-              alt="user-profile-image"
+              alt="user-profile"
               referrerPolicy="no-referrer"
             />
             <p>{user.userName}</p>

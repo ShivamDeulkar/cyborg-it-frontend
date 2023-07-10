@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IoMdSearch } from "react-icons/io";
-import AddPinBtn from "./AddPinBtn";
 
 const Navbar = ({ searchTerm, setSearchTerm, user }) => {
   const navigate = useNavigate();
@@ -26,7 +25,7 @@ const Navbar = ({ searchTerm, setSearchTerm, user }) => {
         >
           <img
             src={user.image}
-            alt="user-profile-image"
+            alt="user-profile"
             className=" w-full  rounded-full"
             referrerPolicy="no-referrer"
           />

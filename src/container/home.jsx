@@ -5,7 +5,7 @@ import { Link, Route, Routes } from "react-router-dom";
 import { Sidebar, UserProfile } from "../components";
 import { client } from "../client";
 import Pins from "./Pins";
-import { userQuery } from "../utils/data";
+import { fetchUser, userQuery } from "../utils/data";
 import logo from "../assets/logo.png";
 import AddPinBtn from "../components/AddPinBtn";
 
@@ -13,13 +13,9 @@ const Home = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const [user, setUser] = useState(null);
   const scrollRef = useRef(null);
+  const userInfo = fetchUser();
 
   useEffect(() => {
-    const userInfo =
-      localStorage.getItem("user") !== "undefined"
-        ? JSON.parse(localStorage.getItem("user"))
-        : localStorage.clear();
-
     const query = userQuery(userInfo?.sub);
     client.fetch(query).then((data) => {
       setUser(data[0]);
@@ -48,7 +44,7 @@ const Home = () => {
           <Link to={`user-profile/${user?._id}`}>
             <img
               src={user?.image}
-              alt="user-profile-image"
+              alt="user-profile"
               referrerPolicy="no-referrer"
               className=" w-12 rounded-full"
             />

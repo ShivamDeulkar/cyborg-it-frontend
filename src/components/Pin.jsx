@@ -6,12 +6,17 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import { BsFillArrowUpRightCircleFill } from "react-icons/bs";
 
 import { client, urlFor } from "../client";
+import { fetchUser } from "../utils/data";
 
 const Pin = ({ pin: { postedBY, image, _id, destination } }) => {
-  console.log(image);
+  const userInfo = fetchUser();
   const [postHovered, setPostHovered] = useState(false);
   const [savingPost, setSavingPost] = useState(false);
   const navigate = useNavigate();
+  const alreadySaved = [];
+  // const alreadySaved = pin?.save?.filter((items) => {
+  //   item.postedBy == postedBy;
+  // });
   return (
     <div className="m-2">
       <div
@@ -43,6 +48,13 @@ const Pin = ({ pin: { postedBY, image, _id, destination } }) => {
                   <MdDownloadForOffline />
                 </a>
               </div>
+              {alreadySaved?.length !== 0 ? (
+                <button>Saved</button>
+              ) : (
+                <button className="bg-white px-2 py-1 rounded-full opacity-75">
+                  Save
+                </button>
+              )}
             </div>
           </div>
         )}

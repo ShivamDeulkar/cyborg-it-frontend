@@ -74,29 +74,6 @@ const Login = () => {
                 <FcGoogle />
                 <span>Sign in with Google</span>
               </div>
-
-              {/* <GoogleLogin
-                onSuccess={(credentialResponse) => {
-                  console.log(credentialResponse);
-                  const decoded = jwt_decode(credentialResponse.credential);
-                  console.log(decoded);
-                  localStorage.setItem("user", JSON.stringify(decoded));
-                  const { name, googleId, imgUrl } = decoded;
-                  const doc = {
-                    _id: googleId,
-                    _type: "user",
-                    username: name,
-                    image: imgUrl,
-                  };
-                }}
-                onError={() => {
-                  console.log("Login Failed");
-                }}
-                additionalProps={{
-                  target: "_blank",
-                  rel: "noopener noreferrer",
-                }}
-              /> */}
             </div>
           </div>
         </div>
