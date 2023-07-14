@@ -1,22 +1,49 @@
 import React, { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, Route, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { MdDownloadForOffline } from "react-icons/md";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { BsFillArrowUpRightCircleFill } from "react-icons/bs";
+// import { useRouter } from "next/router";
+// import { Route } from "next/dist/server/router";
 
 import { client, urlFor } from "../client";
 import { fetchUser } from "../utils/data";
 
-const Pin = ({ pin: { postedBY, image, _id, destination } }) => {
-  const userInfo = fetchUser();
+const Pin = ({ pin: { postedBy, image, _id, destination, save }, pin }) => {
+  const user = fetchUser();
   const [postHovered, setPostHovered] = useState(false);
   const [savingPost, setSavingPost] = useState(false);
   const navigate = useNavigate();
-  const alreadySaved = [];
-  // const alreadySaved = pin?.save?.filter((items) => {
-  //   item.postedBy == postedBy;
-  // });
+  const alreadySaved = !!save?.filter((item) => item.postedBy._id === user.sub)
+    ?.length;
+  // const router = useRouter();
+  const savePin = (id) => {
+    if (!alreadySaved) {
+      setSavingPost(true);
+
+      client
+        .patch(id)
+        .setIfMissing({ save: [] })
+        .insert("after", "save[-1]", [
+          {
+            _key: uuidv4(),
+            userId: user.sub,
+            postedBy: {
+              _type: "postedBy",
+              _ref: user.sub,
+            },
+          },
+        ])
+        .commit()
+        .then(() => {
+          // router.replace(router.asPath);
+          window.location.reload();
+          setSavingPost(false);
+        });
+    }
+  };
+
   return (
     <div className="m-2">
       <div
@@ -48,10 +75,26 @@ const Pin = ({ pin: { postedBY, image, _id, destination } }) => {
                   <MdDownloadForOffline />
                 </a>
               </div>
-              {alreadySaved?.length !== 0 ? (
-                <button>Saved</button>
+              {alreadySaved ? (
+                <button
+                  type="button"
+                  className=" bg-white opacity-70 hover:opacity-100  text-highlight2  text-base px-5 py-1 rounded-full text-center shadow-sm hover:shadow-md "
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // unSavePin(_id);
+                  }}
+                >
+                  {save?.length}
+                  Saved
+                </button>
               ) : (
-                <button className="bg-white px-2 py-1 rounded-full opacity-75">
+                <button
+                  className=" bg-highlight opacity-70 hover:opacity-100  text-white text-base px-5 py-1 rounded-3xl text-center shadow-sm hover:shadow-md"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    savePin(_id);
+                  }}
+                >
                   Save
                 </button>
               )}

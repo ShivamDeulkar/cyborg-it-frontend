@@ -44,11 +44,14 @@ module.exports = {
         secColor: "#efefef",
         navColor: "#BEBEBE",
         highlight: "#03ffff",
+        highlight2: "#ee1ea6",
       },
       borderColor: {
         primary: "#03ffff",
+        highlight: "#ee1ea6",
       },
       backgroundColor: {
+        highlight: "#ee1ea6",
         primary: "#03ffff",
         mainColor: "#FBF8F9",
         secondaryColor: "#F0F0F0",
