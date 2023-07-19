@@ -4,20 +4,12 @@ import { RiHomeFill } from "react-icons/ri";
 
 import logo from "../assets/logo.png";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { categories } from "../utils/data";
 
 const isNotActiveStyle =
   "flex items-center px-5 p-2 gap-3 text-gray-500 hover:text-gray-200 transition-all duration-200 ease-in-out capitalize";
 const isActiveStyle =
   "flex items-center px-5 py-2 gap-3 text-gray-50 font-extrabold border-r-4 border-gray-50 transition-all duration-200 ease-in-out capitalize bg-gray-600";
-
-const categories = [
-  { name: "Animals" },
-  { name: "Wallpapers" },
-  { name: "Photography" },
-  { name: "Gaming" },
-  { name: "Coding" },
-  { name: "Other" },
-];
 
 const Sidebar = ({ user, closeToggle }) => {
   const handleCloseSidebar = () => {
@@ -25,8 +17,8 @@ const Sidebar = ({ user, closeToggle }) => {
   };
 
   return (
-    <div className="h-full relative md:bg-gray-800 md:px-4">
-      <div className="absolute z-10 w-5/6  flex justify-end items-center p-3 md:hidden animate-slide-in">
+    <div className="h-full relative md:bg-gray-800 md:px-4 w-full ">
+      <div className="absolute z-10 w-5/6 md:w-full  flex justify-end items-center p-3 md:hidden animate-slide-in">
         <AiOutlineCloseCircle
           fontSize={30}
           className="cursor-pointer text-highlight"
@@ -38,13 +30,13 @@ const Sidebar = ({ user, closeToggle }) => {
         style={{ backdropFilter: "blur(10px)" }}
       ></div>
       <div
-        className=" absolute md:static top-0 flex flex-col justify-between  bg-gray-800 w-5/6  h-full overflow-y-scroll min-w-210 hide-scrollbar animate-slide-in"
+        className=" absolute md:static top-0 flex flex-col justify-between  bg-gray-800 w-5/6 md:w-full  h-full overflow-y-scroll min-w-210 hide-scrollbar animate-slide-in"
         style={{ opacity: 0.99 }}
       >
-        <div className="flex flex-col ">
+        <div className="flex flex-col w-full">
           <Link
             to="/"
-            className="flex px-5 gap-2 mt-3 mb-2 pt-1 w-190 items-center"
+            className="flex px-5 gap-2 mt-3 mb-2 pt-1 w-190 items-center self-center"
             onClick={handleCloseSidebar}
           >
             <img src={logo} alt="logo" />
@@ -64,7 +56,7 @@ const Sidebar = ({ user, closeToggle }) => {
               Discover categories
             </h3>
             <div className="flex flex-col gap-2 overflow-scroll hXl:h-685  hLg:h-510   hMd:h-72 hSm:h-56  hXs:h-44 hXxs:h-32 h-24">
-              {categories.slice(0, categories.length - 1).map((category) => (
+              {categories.slice(0, categories.length).map((category) => (
                 <NavLink
                   to={`category/${category.name}`}
                   className={({ isActive }) =>

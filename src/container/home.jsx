@@ -1,19 +1,27 @@
 import React, { useState, useRef, useEffect } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, useLocation } from "react-router-dom";
 
 import { Sidebar, UserProfile } from "../components";
 import { client } from "../client";
 import Pins from "./Pins";
-import { fetchUser, userQuery } from "../utils/data";
+import { userQuery } from "../utils/data";
+import { fetchUser } from "../utils/fetchUser";
 import logo from "../assets/logo.png";
 import AddPinBtn from "../components/AddPinBtn";
 
 const Home = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const [user, setUser] = useState(null);
+  const [onCreatePin, setOnCreatePin] = useState(false);
   const scrollRef = useRef(null);
   const userInfo = fetchUser();
+  const currentRoute = useLocation().pathname;
+  if (currentRoute === "/create-pin") {
+    !onCreatePin && setOnCreatePin(true);
+  } else {
+    onCreatePin && setOnCreatePin(false);
+  }
 
   useEffect(() => {
     const query = userQuery(userInfo?.sub);
@@ -28,7 +36,7 @@ const Home = () => {
 
   return (
     <div className="flex bg-gray-900 text-gray-500 h-screen  md:flex-row flex-col transition-height duration-75 ease-out">
-      <div className="hidden md:flex h-screen flex-initial">
+      <div className="hidden md:flex h-screen flex-initial  lg:w-3/12 2xl:max-w-sm  xl:max-w-xs">
         <Sidebar user={user && user} />
       </div>
       <div className="flex md:hidden flex-row items-center">
@@ -59,13 +67,18 @@ const Home = () => {
       </div>
       <div className=" pb-2 flex-1 h-screen overflow-y-scroll" ref={scrollRef}>
         <Routes>
-          <Route path="/user-profile/:userId" element={<UserProfile />} />
+          <Route
+            path="/user-profile/:userId"
+            element={<UserProfile user={user && user} />}
+          />
           <Route path="/*" element={<Pins user={user && user} />} />
         </Routes>
       </div>
-      <div className=" absolute bottom-5 right-5 block ">
-        <AddPinBtn />
-      </div>
+      {!onCreatePin && (
+        <div className=" absolute bottom-5 right-5 block ">
+          <AddPinBtn />
+        </div>
+      )}
     </div>
   );
 };

@@ -4,11 +4,11 @@ import Pin from "./Pin";
 
 const breakPointObj = {
   default: 4,
-  3000: 6,
-  2000: 5,
-  1200: 4,
-  1000: 3,
-  500: 2,
+  2800: 8,
+  2400: 6,
+  2000: 4,
+  1300: 3,
+  1000: 2,
 };
 
 const MasonryLayout = ({ pins }) => {
