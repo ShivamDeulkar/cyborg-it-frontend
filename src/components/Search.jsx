@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import MasonryLayout from "./MasonryLayout";
+import { client } from "../client";
+import { feedQuery, searchQuery } from "../utils/data";
+import Spinner from "./Spinner";
 
-const Search = () => {
+const Search = ({ searchTerm, setSearchTerm }) => {
+  const [] = useState();
+  useEffect(() => {}, []);
+
   return <div>Search</div>;
 };
 

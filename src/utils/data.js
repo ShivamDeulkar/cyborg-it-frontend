@@ -5,22 +5,28 @@ export const categories = [
       "https://i.pinimg.com/750x/eb/47/44/eb4744eaa3b3ccd89749fa3470e2b0de.jpg",
   },
   {
-    name: "fitness",
+    name: "art",
     image:
-      "https://i.pinimg.com/236x/25/14/29/251429345940a47490cc3d47dfe0a8eb.jpg",
+      "https://i.pinimg.com/736x/f4/e5/ba/f4e5ba22311039662dd253be33bf5f0e.jpg",
   },
   {
-    name: "wallpaper",
+    name: "animal",
     image:
-      "https://i.pinimg.com/236x/03/48/b6/0348b65919fcbe1e4f559dc4feb0ee13.jpg",
+      "https://i.pinimg.com/236x/6c/3c/52/6c3c529e8dadc7cffc4fddedd4caabe1.jpg",
   },
   {
-    name: "websites",
+    name: "gaming",
     image:
-      "https://i.pinimg.com/750x/66/b1/29/66b1296d36598122e6a4c5452b5a7149.jpg",
+      "https://i.pinimg.com/564x/30/43/75/304375bedf1f913213fbad2fd9b47e87.jpg",
   },
   {
-    name: "photo",
+    name: "fashion",
+    image:
+      "https://i.pinimg.com/564x/81/ac/d6/81acd6db1b6f9f9321f35368f147d21c.jpg",
+  },
+
+  {
+    name: "photography",
     image:
       "https://i.pinimg.com/236x/72/8c/b4/728cb43f48ca762a75da645c121e5c57.jpg",
   },
@@ -34,31 +40,18 @@ export const categories = [
     image:
       "https://i.pinimg.com/236x/b9/82/d4/b982d49a1edd984c4faef745fd1f8479.jpg",
   },
-  {
-    name: "art",
-    image:
-      "https://i.pinimg.com/736x/f4/e5/ba/f4e5ba22311039662dd253be33bf5f0e.jpg",
-  },
+
   {
     name: "travel",
     image:
       "https://i.pinimg.com/236x/fa/95/98/fa95986f2c408098531ca7cc78aee3a4.jpg",
   },
   {
-    name: "quotes",
+    name: "memes",
     image:
       "https://i.pinimg.com/236x/46/7c/17/467c17277badb00b638f8ec4da89a358.jpg",
   },
-  {
-    name: "cats",
-    image:
-      "https://i.pinimg.com/236x/6c/3c/52/6c3c529e8dadc7cffc4fddedd4caabe1.jpg",
-  },
-  {
-    name: "dogs",
-    image:
-      "https://i.pinimg.com/236x/1b/c8/30/1bc83077e363db1a394bf6a64b071e9f.jpg",
-  },
+
   {
     name: "others",
     image:
@@ -184,6 +177,7 @@ export const userQuery = (userId) => {
 };
 
 export const userCreatedPinsQuery = (userId) => {
+  console.log(userId);
   const query = `*[ _type == 'pin' && userId == '${userId}'] | order(_createdAt desc){
     image{
       asset->{

@@ -5,6 +5,7 @@ import { client } from "../client";
 import MasonryLayout from "./MasonryLayout";
 import Spinner from "./Spinner";
 import { feedQuery, searchQuery } from "../utils/data";
+import { BiSolidMessageError } from "react-icons/bi";
 
 const Feed = () => {
   const [loading, setLoading] = useState(false);
@@ -28,6 +29,13 @@ const Feed = () => {
 
   if (loading)
     return <Spinner message="We are adding new ideas to your feed!" />;
+  if (!pins?.length)
+    return (
+      <div className="flex items-center justify-center h-full  flex-col">
+        <BiSolidMessageError className="text-2xl" />
+        <h2 className="text-lg">No pins avaliable</h2>
+      </div>
+    );
   return <div>{pins && <MasonryLayout pins={pins} />}</div>;
 };
 

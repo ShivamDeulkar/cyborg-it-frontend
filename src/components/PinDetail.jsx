@@ -8,13 +8,38 @@ import MasonaryLayout from "./MasonryLayout";
 import { pinDetailMorePinQuery, pinDetailQuery } from "../utils/data";
 import Spinner from "./Spinner";
 
-const PinDetail = () => {
+const PinDetail = ({ user }) => {
   const [pins, setPins] = useState(null);
   const [pinDetail, setPinDetail] = useState(null);
-  const [comments, setComments] = useState("");
+  const [comment, setComment] = useState("");
   const [addingComment, setAddingComment] = useState(false);
   // ID
   const { pinId } = useParams();
+
+  const addComment = () => {
+    if (comment) {
+      setAddingComment(true);
+      client
+        .patch(pinId)
+        .setIfMissing({ comments: [] })
+        .insert("after", "comments[-1]", [
+          {
+            comment,
+            _key: uuidv4(),
+            postedBy: {
+              _type: "postedBy",
+              _ref: user._id,
+            },
+          },
+        ])
+        .commit()
+        .then(() => {
+          fetchPinDetials();
+          setComment("");
+          setAddingComment(false);
+        });
+    }
+  };
 
   const fetchPinDetials = () => {
     let query = pinDetailQuery(pinId);
@@ -35,170 +60,136 @@ const PinDetail = () => {
 
   useEffect(() => {
     fetchPinDetials();
-    console.log(pins);
   }, [pinId]);
 
   if (!pinDetail) return <Spinner message="Loading pin" />;
-
   return (
-    <div
-      className="flex xl:flex-row flex-col m-auto bg-gray-700 mt-4 overflow-hidden"
-      style={{ maxWidth: "1500px", borderRadius: "32px" }}
-    >
-      {/* img */}
-      <div className="flex justify-center items-center w-full  md:items-start flex-initial xl:m-0  mt-5">
-        <img
-          src={pinDetail.image && urlFor(pinDetail.image)}
-          alt={pinDetail.about}
-          className="xl:rounded-none rounded-lg  w-2/3 xl:w-full xl:min-w-350 "
-        ></img>
-      </div>
-      {/* details */}
-      <div className="xl:w-2/3 w-full  p-5 flex flex-col gap-4 ">
-        {/* download */}
-        <div className="grid grid-cols-2 items-center w-full bg-red-300 h-fit">
-          <div className="flex gap-2 items-center">
-            <a
-              href={`${pinDetail.image?.asset?.url}?dl=`}
-              download
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              className="bg-white w-9 h-9 rounded-full flex items-center justify-center text-dark text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none"
-            >
-              <MdDownloadForOffline />
-            </a>
-          </div>
-          <a
-            href={pinDetail.destination}
-            target="_blank"
-            rel="noreferrer"
-            className="bg-white flex items-center gap-2 font-semibold p-2  text-sm rounded-full opacity-70 hover:opacity-100 hover:shadow-md px-4 justify-self-end"
-          >
-            {pinDetail.destination}
-          </a>
+    <div className="h-fit flex flex-col items-center justify-center">
+      <div className="bg-gray-800 h-fit xl:h-3/4  flex items-center xl:flex-row flex-col  rounded-2xl mt-4 xl:p-0  justify-between xl:w-full w-11/12">
+        <div className="xl:h-full xl:w-2/3 h-1/3 flex items-center justify-center xl:p-5 xl:mt-0 ">
+          <img
+            src={pinDetail?.image?.asset?.url}
+            alt="post-img"
+            className=" object-contain  h-full xl:rounded-lg "
+          />
         </div>
-        {/* title and comments*/}
-        <div className="bg-red-500  relative flex-1 flex flex-col">
-          <div className="h-fit bg-green-200">
-            <h1 className="text-4xl font-bold break-words  text-gray-300 capitalize">
+        {/* details */}
+        <div className=" xl:h-full  h-fit    p-5 flex  flex-col xl:w-1/2  ">
+          {/* download */}
+          <div className="h-fit mb-4">
+            <div className="flex h-fit w-full items-center justify-between">
+              <div className="flex gap-2 items-center">
+                <a
+                  href={`${pinDetail.image?.asset?.url}?dl=`}
+                  download
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  className="bg-gray-200 w-9 h-9 rounded-full flex items-center justify-center text-dark text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none"
+                >
+                  <MdDownloadForOffline />
+                </a>
+              </div>
+              <a
+                href={pinDetail.destination}
+                target="_blank"
+                rel="noreferrer"
+                className="bg-gray-200 flex items-center gap-2 font-semibold p-2  text-sm rounded-full opacity-70 hover:opacity-100 hover:shadow-md px-4 justify-self-end"
+              >
+                {pinDetail.destination}
+              </a>
+            </div>
+          </div>
+          {/* title */}
+          <div className="h-fit rounded mb-4 ">
+            <h1 className="break-words text-4xl font-bold capitalize text-gray-300">
               {pinDetail.title}
             </h1>
+            <p className="mt-1 text-gray-400">{pinDetail.about}</p>
           </div>
-          <div className="bg-green-500 flex-1 overflow-hidden">
-            <div className="bg-blue-300 h-full flex flex-col gap-4">
-              <div className="bg-black h-28 opacity-20"></div>
-              <div className="bg-black h-28 opacity-20"></div>
-              <div className="bg-black h-28 opacity-20"></div>
-              <div className="bg-black h-28 opacity-20"></div>
-              <div className="bg-black h-28 opacity-20"></div>
+          {/* comments */}
+          <div className="h-fit rounded mb-2">
+            <p className="text-gray-300 mb-1">
+              {pinDetail.comments?.length} Comments
+            </p>
+          </div>
+          <div
+            className="h-fit flex-1 overflow-scroll rounded mb-4"
+            style={{ maxHeight: "500px" }}
+          >
+            <div className="flex flex-col items-center justify-center gap-4">
+              {pinDetail.comments?.map((comment, i) => (
+                <div
+                  className="flex gap-2 items-start w-full   rounded-md"
+                  key={i}
+                >
+                  <div
+                    className="grid gap-4"
+                    style={{ gridTemplateColumns: "fit-content(400px) 1fr" }}
+                  >
+                    <Link
+                      to={`user-profile/${comment.postedBy?._id}`}
+                      className=" flex justify-start items-center gap-1
+         w-fit h-fit"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <img
+                        src={comment.postedBy?.image}
+                        alt="user-profile"
+                        className=" w-8 h-8   rounded-full shadow-sm "
+                        referrerPolicy="no-referrer"
+                      />
+                      <p className="font-bold text-xs  text-gray-300">
+                        {pinDetail.postedBy?.userName.split(" ").at(0)}
+                      </p>
+                    </Link>
+                    <p className=" font-normal text-gray-400 text-sm text-gray-30 break-all px-0 w-full">
+                      {comment.comment}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* add comments */}
+          <div className=" flex h-fit rounded ">
+            <div className=" bg-gray-700 flex w-full px-4 py-2 rounded-lg gap-4 items-center">
+              <img
+                src={user?.image}
+                alt="user-profile"
+                className=" w-10 h-10   rounded-full shadow-sm "
+                referrerPolicy="no-referrer"
+              />
+              <input
+                className="w-full bg-gray-600 rounded-xl outline-none text-md sm:text-lg text-base border-2 border-gray-500 text-gray-200 p-2 placeholder:text-gray-300 "
+                placeholder="Add a comment"
+                type="text"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <button
+                type="button"
+                className=" bg-highlight  text-white rounded-full px-6 py-2 font-semibold text-base outline-none"
+                onClick={addComment}
+              >
+                {addingComment ? "Posting" : "Post"}
+              </button>
             </div>
           </div>
         </div>
       </div>
+      {pins?.length > 0 ? (
+        <div className="w-full flex items-center justify-center flex-col">
+          <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-300 w-full text-center">
+            More like this
+          </h2>
+          <MasonaryLayout pins={pins} />
+        </div>
+      ) : (
+        <Spinner message="Loading more pins" />
+      )}
     </div>
   );
 };
 
 export default PinDetail;
-
-{
-  /* <div className="w-full h-fit">
-            <h1 className="text-4xl font-bold break-words  text-gray-300 capitalize">
-              {pinDetail.title}
-            </h1>
-            <p className="mt-1 text-gray-400">{pinDetail.about}</p>
-            <div className="flex items-center mt-4">
-              <div>
-                <Link
-                  to={`user-profile/${pinDetail.postedBy?._id}`}
-                  className="flex justify-start gap-2  items-center"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <img
-                    src={pinDetail.postedBy?.image}
-                    alt="user-profile"
-                    className=" w-12 h-12   rounded-full shadow-sm "
-                    referrerPolicy="no-referrer"
-                  />
-                  <p className="font-bold text-md text-gray-300">
-                    {pinDetail.postedBy?.userName}
-                  </p>
-                </Link>
-              </div>
-            </div>
-          </div> */
-}
-
-{
-  /* <div className="flex flex-col gap-3 h-full   justify-start overflow-scroll">
-            <h2 className="text-gray-300 text-xl">
-              {pinDetail.comments?.length} Comments
-            </h2>
-            <div className=" flex flex-col gap-3   items-start  "></div>
-          </div> */
-}
-
-// {pinDetail.comments?.map((comment, i) => (
-//   <div
-//     className="flex gap-2 items-start w-full bg-gray-600 p-3 rounded-md"
-//     key={i}
-//   >
-//     <div
-//       className="grid gap-4"
-//       style={{ gridTemplateColumns: "fit-content(400px) 1fr" }}
-//     >
-//       <Link
-//         to={`user-profile/${comment.postedBy?._id}`}
-//         className=" flex justify-start items-center gap-1
-//          w-fit h-fit"
-//         onClick={(e) => e.stopPropagation()}
-//       >
-//         <img
-//           src={pinDetail.postedBy?.image}
-//           alt="user-profile"
-//           className=" w-8 h-8   rounded-full shadow-sm "
-//           referrerPolicy="no-referrer"
-//         />
-//         <p className="font-bold text-xs  text-gray-300">
-//           {pinDetail.postedBy?.userName.split(" ").at(0)}
-//         </p>
-//       </Link>
-//       <p className=" font-normal text-gray-400 text-sm text-gray-30 break-all px-0 w-full">
-//         {comment.comment}
-//       </p>
-//     </div>
-//   </div>
-// ))}
-
-{
-  /* addcomments */
-}
-{
-  /* <div className="  flex items-end">
-<div className=" bg-gray-600 flex w-full px-4 py-2 rounded-lg gap-4">
-  <Link
-    to={`user-profile/${pinDetail.postedBy?._id}`}
-    className="flex justify-start gap-2  items-center    rounded-xl"
-    onClick={(e) => e.stopPropagation()}
-  >
-    <img
-      src={pinDetail.postedBy?.image}
-      alt="user-profile"
-      className=" w-10 h-10   rounded-full shadow-sm "
-      referrerPolicy="no-referrer"
-    />
-    <p
-      className="font-bold text-sm
-     text-gray-300"
-    >
-      {pinDetail.postedBy?.userName}
-    </p>
-  </Link>
-  <input
-    className="w-full bg-gray-500 rounded-md outline-none text-md sm:text-lg text-base border-2 border-gray-500 text-gray-300 p-2 placeholder:text-gray-400 "
-    placeholder="Add a comment"
-  />
-</div>
-</div> */
-}

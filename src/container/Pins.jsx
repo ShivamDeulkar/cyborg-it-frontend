@@ -6,15 +6,15 @@ import { Navbar, Feed, PinDetail, CreatePin, Search } from "../components";
 const Pins = ({ user }) => {
   const [searchTerm, setSearchTerm] = useState("");
   return (
-    <div className=" px-2 md:px-5">
-      <div className="mb-2 ">
+    <div className="flex flex-col px-2 md:px-5 h-full">
+      <div className="mb-2 h-fit ">
         <Navbar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           user={user && user}
         />
       </div>
-      <div className=" h-full">
+      <div className=" flex-1">
         <Routes>
           <Route path="/" element={<Feed />} />
           <Route path="/category/:categoryId" element={<Feed />} />

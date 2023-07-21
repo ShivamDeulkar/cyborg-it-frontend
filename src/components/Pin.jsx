@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Navigate, Route, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { MdDownloadForOffline } from "react-icons/md";
 import { AiTwotoneDelete } from "react-icons/ai";
@@ -125,9 +125,9 @@ const Pin = ({ pin }) => {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <BsFillArrowUpRightCircleFill />
-                  {destination.length > 15
-                    ? destination.slice(8, 15) + ".."
-                    : destination.slice(8)}
+                  {destination.length > 20
+                    ? destination.slice(12, 20) + ".."
+                    : destination.slice(12)}
                 </a>
               )}
               {postedBy?._id === user?.sub && (
