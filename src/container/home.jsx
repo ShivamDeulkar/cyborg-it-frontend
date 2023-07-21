@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { Link, Route, Routes, useLocation } from "react-router-dom";
+import {
+  Link,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 import { Sidebar, UserProfile } from "../components";
 import { client } from "../client";
@@ -17,6 +23,7 @@ const Home = () => {
   const scrollRef = useRef(null);
   const userInfo = fetchUser();
   const currentRoute = useLocation().pathname;
+  const naviagte = useNavigate();
   if (currentRoute === "/create-pin") {
     !onCreatePin && setOnCreatePin(true);
   } else {
@@ -28,11 +35,13 @@ const Home = () => {
     client.fetch(query).then((data) => {
       setUser(data[0]);
     });
-  }, []);
+  }, [userInfo?.sub]);
 
   useEffect(() => {
-    scrollRef.current.scrollTo(0, 0);
-  }, []);
+    if (user) scrollRef.current.scrollTo(0, 0);
+  }, [user]);
+
+  if (!user) naviagte("/login");
 
   return (
     <div className="flex bg-gray-900 text-gray-500 h-screen  md:flex-row flex-col transition-height duration-75 ease-out">

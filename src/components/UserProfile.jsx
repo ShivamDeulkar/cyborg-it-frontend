@@ -20,7 +20,7 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(false);
   const [pinLoading, setPinLoading] = useState(false);
 
-  const [text, setText] = useState("created");
+  const [text, setText] = useState("Created");
   const [activeBtn, setActiveBtn] = useState("created");
   const randomImg = "https://source.unsplash.com/1600x900/?cyberpunk,cyborg";
   const activeBtnStyles =
@@ -41,7 +41,7 @@ const UserProfile = () => {
   //
   useEffect(() => {
     setPinLoading(true);
-    if (text === "Created") {
+    if (text === "created" || text === "Created") {
       // created pin
       setPins(null);
       const createdPinQuery = userCreatedPinsQuery(userId);
