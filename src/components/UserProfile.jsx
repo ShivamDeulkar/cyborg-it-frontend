@@ -95,7 +95,7 @@ const UserProfile = () => {
                 alt="user-profile"
                 className=" rounded-full w-20 h-20 scale-150 -translate-y-1/2   shadow-xl object-cover"
               />
-              <h2 className=" font-bold text-center  text-gray-200 text-3xl">
+              <h2 className=" font-bold text-center  text-gray-200 text-3xl mb-2">
                 {user.userName}
               </h2>
               <div className="absolute top-0 right-0 m-3 z-10 ">
