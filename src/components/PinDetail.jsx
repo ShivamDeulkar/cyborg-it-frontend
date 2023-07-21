@@ -109,14 +109,16 @@ const PinDetail = ({ user }) => {
                         <MdDownloadForOffline />
                       </a>
                     </div>
-                    <a
-                      href={pinDetail.destination}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="bg-gray-200 flex items-center gap-2 font-semibold p-2  text-sm rounded-full opacity-80 hover:opacity-100 hover:shadow-md px-4 justify-self-end"
-                    >
-                      {pinDetail.destination}
-                    </a>
+                    {pinDetail.destination && (
+                      <a
+                        href={pinDetail.destination}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="bg-gray-200 flex items-center gap-2 font-semibold p-2  text-sm rounded-full opacity-80 hover:opacity-100 hover:shadow-md px-4 justify-self-end"
+                      >
+                        {pinDetail.destination}
+                      </a>
+                    )}
                   </div>
                 </div>
                 <div>
@@ -136,7 +138,10 @@ const PinDetail = ({ user }) => {
                 </p>
                 <div className="h-full overflow-y-auto pb-10 ">
                   {pinDetail.comments?.map((comment, i) => (
-                    <div className="w-full h-fit shrink-0 flex gap-2 items-start justify-center  py-2">
+                    <div
+                      className="w-full h-fit shrink-0 flex gap-2 items-start justify-center  py-2"
+                      key={i}
+                    >
                       <Link
                         to={`user-profile/${comment.postedBy?._id}`}
                         className=" flex justify-start items-center w-fit h-fit"
@@ -226,14 +231,16 @@ const PinDetail = ({ user }) => {
                     <MdDownloadForOffline />
                   </a>
                 </div>
-                <a
-                  href={pinDetail.destination}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-gray-200 flex items-center gap-2 font-semibold p-2 text-sm rounded-full opacity-80 hover:opacity-100 hover:shadow-md px-4 justify-self-end"
-                >
-                  {pinDetail.destination}
-                </a>
+                {pinDetail.destination && (
+                  <a
+                    href={pinDetail.destination}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-gray-200 flex items-center gap-2 font-semibold p-2 text-sm rounded-full opacity-80 hover:opacity-100 hover:shadow-md px-4 justify-self-end"
+                  >
+                    {pinDetail.destination}
+                  </a>
+                )}
               </div>
             </div>
             <div>

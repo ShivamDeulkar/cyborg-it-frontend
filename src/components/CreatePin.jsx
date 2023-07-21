@@ -49,7 +49,7 @@ const CreatePin = ({ user }) => {
   const savePin = (e) => {
     e.preventDefault();
     console.log(e);
-    if (title && about && destination && imageAsset?._id && category) {
+    if (title && about && imageAsset?._id && category) {
       const doc = {
         _type: "pin",
         title,
@@ -164,12 +164,12 @@ const CreatePin = ({ user }) => {
           />
           <input
             className="outline-none text-md sm:text-lg text-base border-2 border-gray-500 p-2 bg-gray-800 placeholder:text-gray-500 rounded-md"
-            type="url"
+            type="text"
             value={destination}
             onChange={(e) => {
               setDestination(e.target.value);
             }}
-            placeholder="Destination URL"
+            placeholder="Source URL (optional & Enter valid URL)"
           />
           <div className="flex flex-col gap-5">
             <div>
