@@ -62,7 +62,7 @@ const Pin = ({ pin }) => {
           className="  w-full"
         />
         <Link
-          to={`user-profile/${postedBy?._id}`}
+          to={`/user-profile/${postedBy?._id}`}
           className="flex justify-start gap-2 p-2 items-center absolute z-50 bottom-0 left-0 "
           onClick={(e) => e.stopPropagation()}
         >

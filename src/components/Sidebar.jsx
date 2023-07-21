@@ -55,7 +55,7 @@ const Sidebar = ({ user, closeToggle }) => {
             <h3 className="mt-2 px-5 text-lg 2xl:text-xl text-gray-400">
               Discover categories
             </h3>
-            <div className="flex flex-col gap-2 overflow-scroll  hXl:h-685  hLg:h-510   hMd:h-72 hSm:h-56  hXs:h-44 hXxs:h-32 h-24">
+            <div className="flex flex-col gap-2 overflow-scroll flex-1">
               {categories.slice(0, categories.length).map((category) => (
                 <NavLink
                   to={`category/${category.name}`}

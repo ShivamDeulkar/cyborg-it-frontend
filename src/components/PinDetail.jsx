@@ -121,6 +121,22 @@ const PinDetail = ({ user }) => {
                     )}
                   </div>
                 </div>
+                <div className="text-base flex flex-col items-center gap-1 mb-1">
+                  <p className="text-gray-500">Posted by</p>
+                  <Link
+                    to={`/user-profile/${pinDetail.postedBy?._id}`}
+                    className="flex items-center gap-2 w-fit bg-gray-600 px-4 py-2 rounded-full"
+                  >
+                    <img
+                      src={pinDetail.postedBy.image}
+                      alt="posted-by-profile"
+                      className=" w-10 h-10  rounded-full"
+                    />
+                    <p className="text-gray-400">
+                      {pinDetail.postedBy.userName}
+                    </p>
+                  </Link>
+                </div>
                 <div>
                   <h1 className="text-3xl text-gray-100 mb-1">
                     {pinDetail.title}
@@ -143,7 +159,7 @@ const PinDetail = ({ user }) => {
                       key={i}
                     >
                       <Link
-                        to={`user-profile/${comment.postedBy?._id}`}
+                        to={`/user-profile/${comment.postedBy?._id}`}
                         className=" flex justify-start items-center w-fit h-fit"
                         onClick={(e) => e.stopPropagation()}
                       >
@@ -247,6 +263,20 @@ const PinDetail = ({ user }) => {
               <h1 className="text-3xl text-gray-100 mb-1">{pinDetail.title}</h1>
               <p className="text-gray-400">{pinDetail.about}</p>
             </div>
+            <div className="text-base flex flex-col items-center gap-1 mb-1">
+              <p className="text-gray-500">Posted by</p>
+              <Link
+                to={`/user-profile/${pinDetail.postedBy?._id}`}
+                className="flex items-center gap-2 w-fit bg-gray-600 px-4 py-2 rounded-full"
+              >
+                <img
+                  src={pinDetail.postedBy.image}
+                  alt="posted-by-profile"
+                  className=" w-10 h-10  rounded-full"
+                />
+                <p className="text-gray-400">{pinDetail.postedBy.userName}</p>
+              </Link>
+            </div>
           </div>
           <div
             className="pb-10"
@@ -263,7 +293,7 @@ const PinDetail = ({ user }) => {
                   key={i}
                 >
                   <Link
-                    to={`user-profile/${comment.postedBy?._id}`}
+                    to={`/user-profile/${comment.postedBy?._id}`}
                     className="flex justify-start items-center w-fit h-fit"
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -318,8 +348,8 @@ const PinDetail = ({ user }) => {
       </div>
       {/* mobile end */}
       {/* Start of Related pins */}
-      <div className="w-full p-4l lg:mt-4   rounded-lg shadow-md ">
-        <h2 className="text-2xl font-bold mb-4 text-center text-gray-200">
+      <div className="w-full p-4l mt-8   rounded-lg shadow-md ">
+        <h2 className="text-2xl font-bold mb-2 text-center text-gray-200">
           Related Pins
         </h2>
         {/* Add your content for related pins here */}
