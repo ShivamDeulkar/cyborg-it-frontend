@@ -7,6 +7,7 @@ import { BsFillArrowUpRightCircleFill } from "react-icons/bs";
 
 import { client, urlFor } from "../client";
 import { fetchUser } from "../utils/fetchUser";
+import { BiLoaderCircle } from "react-icons/bi";
 
 const Pin = ({ pin }) => {
   const { postedBy, image, _id, destination, save } = pin;
@@ -94,18 +95,22 @@ const Pin = ({ pin }) => {
                 </a>
               </div>
               {alreadySaved ? (
-                <div className=" bg-white opacity-70 hover:opacity-100  text-highlight2 font-semibold  text-sm px-5 py-1 rounded-full text-center shadow-sm shadow-gray-500 hover:shadow-sm hover:shadow-gray-500 ">
+                <div className=" bg-white opacity-70 hover:opacity-100  text-highlight2 font-semibold  text-sm px-5 py-1 rounded-full text-center shadow-sm shadow-gray-500 hover:shadow-sm hover:shadow-gray-500 w-16 h-9 flex items-center justify-center ">
                   <span>Saved</span>
                 </div>
               ) : (
                 <button
-                  className=" bg-highlight opacity-70 hover:opacity-100  text-white font-semibold text-sm px-5 py-1 rounded-3xl text-center shadow-sm hover:shadow-md"
+                  className=" bg-highlight opacity-70 hover:opacity-100  text-white font-semibold text-sm px-5 py-1 rounded-3xl text-center shadow-sm hover:shadow-md w-16 h-9 flex items-center justify-center"
                   onClick={(e) => {
                     e.stopPropagation();
                     savePin(_id);
                   }}
                 >
-                  {savingPost ? "Saving" : "Save"}
+                  {savingPost ? (
+                    <BiLoaderCircle className=" text-lg" />
+                  ) : (
+                    <p className=" text-base">Save</p>
+                  )}
                 </button>
               )}
             </div>

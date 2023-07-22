@@ -359,32 +359,6 @@ const PinDetail = ({ user }) => {
           style={{ maxHeight: "calc(100vh)" }}
         >
           <div className="mb-4 h-fit text-xl font-bold">
-            {/* <div className="h-fit mb-2">
-              <div className="flex h-fit w-full items-center justify-between">
-                <div className="flex gap-2 items-center">
-                  <a
-                    href={`${pinDetail.image?.asset?.url}?dl=`}
-                    download
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                    className="bg-gray-200 w-9 h-9 rounded-full flex items-center justify-center text-dark text-xl opacity-80 hover:opacity-100 hover:shadow-md outline-none"
-                  >
-                    <MdDownloadForOffline />
-                  </a>
-                </div>
-                {pinDetail.destination && (
-                  <a
-                    href={pinDetail.destination}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="bg-gray-200 flex items-center gap-2 font-semibold p-2 text-sm rounded-full opacity-80 hover:opacity-100 hover:shadow-md px-4 justify-self-end"
-                  >
-                    {pinDetail.destination}
-                  </a>
-                )}
-              </div>
-            </div> */}
             <div className="h-fit  mb-4">
               <div className="flex h-fit w-full items-center justify-between ">
                 {/* all user view */}

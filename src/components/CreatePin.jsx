@@ -91,7 +91,7 @@ const CreatePin = ({ user }) => {
         onSubmit={(e) => savePin(e)}
         className="flex lg:flex-row flex-col  justify-center item-center bg-gray-800 lg:p-5 p-3  w-full gap-4 "
       >
-        <div className=" bg-gray-700  flex items-center   rounded-lg w-full lg:w-7/12 xl:w-2/3  ">
+        <div className=" bg-gray-700   flex items-center   rounded-lg w-full lg:w-7/12 xl:w-2/3  ">
           <div className="flex justify-center items-center flex-col   w-full h-420 ">
             {loading && <Spinner />}
             {wrongImageType && (
@@ -106,7 +106,7 @@ const CreatePin = ({ user }) => {
                     </p>
                     <p className="text-lg text-gray-300"> click to upload</p>
                   </div>
-                  <p className=" text-gray-500">
+                  <p className=" text-gray-500 text-center p-2">
                     Try to use high-quality JPG, JPEG, PNG, SVG or GIF less than
                     20MB
                   </p>
