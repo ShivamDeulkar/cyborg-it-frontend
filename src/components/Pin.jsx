@@ -14,8 +14,9 @@ const Pin = ({ pin }) => {
   const [postHovered, setPostHovered] = useState(false);
   const [savingPost, setSavingPost] = useState(false);
   const navigate = useNavigate();
-  const alreadySaved = !!save?.filter((item) => item.postedBy._id === user?.sub)
-    ?.length;
+  const alreadySaved = !!save?.filter(
+    (item) => item.postedBy?._id === user?.sub
+  )?.length;
 
   // { pin: { postedBy, image, _id, destination, save }
   const savePin = (id) => {
@@ -48,6 +49,7 @@ const Pin = ({ pin }) => {
       setSavingPost(false);
     });
   };
+
   return (
     <div className="mx-2 my-4  overflow-hidden rounded-lg ">
       <div
@@ -92,17 +94,9 @@ const Pin = ({ pin }) => {
                 </a>
               </div>
               {alreadySaved ? (
-                <button
-                  type="button"
-                  className=" bg-white opacity-70 hover:opacity-100  text-highlight2 font-semibold  text-sm px-5 py-1 rounded-full text-center shadow-sm shadow-gray-500 hover:shadow-sm hover:shadow-gray-500 "
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // unSavePin(_id);
-                  }}
-                >
-                  <span>{save?.length}</span>
-                  <span> Saved</span>
-                </button>
+                <div className=" bg-white opacity-70 hover:opacity-100  text-highlight2 font-semibold  text-sm px-5 py-1 rounded-full text-center shadow-sm shadow-gray-500 hover:shadow-sm hover:shadow-gray-500 ">
+                  <span>Saved</span>
+                </div>
               ) : (
                 <button
                   className=" bg-highlight opacity-70 hover:opacity-100  text-white font-semibold text-sm px-5 py-1 rounded-3xl text-center shadow-sm hover:shadow-md"

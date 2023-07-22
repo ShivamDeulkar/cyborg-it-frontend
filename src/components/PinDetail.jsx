@@ -1,20 +1,102 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { MdDownloadForOffline } from "react-icons/md";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import { client } from "../client";
 import MasonaryLayout from "./MasonryLayout";
 import { pinDetailMorePinQuery, pinDetailQuery } from "../utils/data";
 import Spinner from "./Spinner";
-import { AiOutlineLoading3Quarters, AiOutlineSend } from "react-icons/ai";
+import {
+  AiOutlineLoading3Quarters,
+  AiOutlineSend,
+  AiTwotoneDelete,
+} from "react-icons/ai";
+import { BiLoaderCircle } from "react-icons/bi";
 
 const PinDetail = ({ user }) => {
+  const navigate = useNavigate();
+
   const [pins, setPins] = useState(null);
   const [pinDetail, setPinDetail] = useState(null);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [addingComment, setAddingComment] = useState(false);
+  const [savingPost, setSavingPost] = useState(false);
+  const [unSavingPost, setUnSavingPost] = useState(false);
+
+  const alreadySaved = !!pinDetail?.save?.filter(
+    (item) => item.postedBy?._id === user?._id
+  )?.length;
+
+  const savePin = () => {
+    if (!alreadySaved) {
+      setSavingPost(true);
+      client
+        .patch(pinDetail?._id)
+        .setIfMissing({ save: [] })
+        .insert("after", "save[-1]", [
+          {
+            _key: uuidv4(),
+            userId: user?._id,
+            postedBy: {
+              _type: "postedBy",
+              _ref: user?._id,
+            },
+          },
+        ])
+        .commit()
+        .then(() => {
+          window.location.reload();
+          setSavingPost(false);
+        });
+    }
+  };
+  const unsavePin = () => {
+    const userId = user?._id; // Replace this with how you get the current user's ID
+
+    if (
+      !userId ||
+      !pinDetail ||
+      !pinDetail?.save ||
+      pinDetail?.save?.length === 0
+    ) {
+      return; // Nothing to unsave or user not logged in
+    }
+
+    const indexToRemove = pinDetail.save.findIndex(
+      (item) => item?.postedBy._id === userId
+    );
+    console.log(indexToRemove);
+    if (indexToRemove === -1) {
+      return; // The post is not saved by the user, nothing to unsave
+    }
+    setUnSavingPost(true);
+    const updatedSaveArray = pinDetail.save.slice(); // Create a copy of the array
+    updatedSaveArray.splice(indexToRemove, 1); // Remove the element at the specified index
+
+    // Update the pin document
+    client
+      .patch(pinDetail._id)
+      .set({ save: updatedSaveArray })
+      .commit()
+      .then(() => {
+        window.location.reload(); // You may consider updating the state instead of reloading the page
+        // Additional code here if needed after unsave
+        setUnSavingPost(false);
+      })
+      .catch((error) => {
+        console.error("Error while unsaving post:", error);
+      });
+  };
+
+  const deletePin = (id) => {
+    client.delete(id).then(() => {
+      setSavingPost(false);
+      navigate("/");
+    });
+  };
+
   // ID
   const { pinId } = useParams();
 
@@ -95,37 +177,81 @@ const PinDetail = ({ user }) => {
             >
               {/* title name */}
               <div className="mb-4  h-fit text-xl font-bold">
-                <div className="h-fit  mb-2">
-                  <div className="flex h-fit w-full items-center justify-between">
-                    <div className="flex gap-2 items-center">
-                      <a
-                        href={`${pinDetail.image?.asset?.url}?dl=`}
-                        download
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        className="bg-gray-200 w-9 h-9 rounded-full flex items-center justify-center text-dark text-xl opacity-80 hover:opacity-100 hover:shadow-md outline-none"
-                      >
-                        <MdDownloadForOffline />
-                      </a>
+                <div className="h-fit  mb-4">
+                  <div className="flex h-fit w-full items-center justify-between ">
+                    {/* all user view */}
+                    <div className=" w-full h-fit flex gap-2 items-center">
+                      <div className="flex gap-2 items-center">
+                        <a
+                          href={`${pinDetail.image?.asset?.url}?dl=`}
+                          download
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          className="bg-white w-10 h-10 rounded-full flex items-center justify-center text-dark text-xl opacity-90 hover:opacity-100 hover:shadow-md outline-none"
+                        >
+                          <MdDownloadForOffline />
+                        </a>
+                      </div>
+                      {/* save */}
+                      <div>
+                        {!alreadySaved ? (
+                          <button
+                            className="flex items-center justify-center  bg-highlight opacity-90 hover:opacity-100  text-white font-semibold  rounded-3xl text-center shadow-sm hover:shadow-md py-2 px-4 font-sans w-16 h-10"
+                            onClick={(e) => {
+                              savePin(pinDetail?._id);
+                            }}
+                          >
+                            {savingPost ? (
+                              <BiLoaderCircle className=" text-lg" />
+                            ) : (
+                              <p className=" text-base">Save</p>
+                            )}
+                          </button>
+                        ) : (
+                          <button
+                            className="flex items-center justify-center  bg-white  opacity-90 hover:opacity-100 text-highlight2 font-semibold text-sm  rounded-3xl text-center shadow-sm hover:shadow-md py-2 px-4 font-sans w-16 h-10"
+                            onClick={(e) => {
+                              unsavePin(pinDetail?._id);
+                            }}
+                          >
+                            {unSavingPost ? (
+                              <BiLoaderCircle className=" text-lg" />
+                            ) : (
+                              <p className=" text-base">Saved</p>
+                            )}
+                          </button>
+                        )}
+                      </div>
+                      {pinDetail.destination && (
+                        <a
+                          href={pinDetail.destination}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="bg-white flex items-center gap-2 font-semibold p-2 h-10  text-sm rounded-full opacity-90 hover:opacity-100 hover:shadow-md px-4 justify-self-end"
+                        >
+                          {pinDetail.destination}
+                        </a>
+                      )}
                     </div>
-                    {pinDetail.destination && (
-                      <a
-                        href={pinDetail.destination}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="bg-gray-200 flex items-center gap-2 font-semibold p-2  text-sm rounded-full opacity-80 hover:opacity-100 hover:shadow-md px-4 justify-self-end"
+                    {/* same user delete pin */}
+                    {user?._id === pinDetail?.postedBy?._id && (
+                      <button
+                        className=" bg-red-500 flex items-center justify-center gap-2 text-white font-semibold  text-sm  rounded-full opacity-90 hover:opacity-100 hover:shadow-md p-2 h-10 w-10"
+                        onClick={() => {
+                          deletePin(pinId);
+                        }}
                       >
-                        {pinDetail.destination}
-                      </a>
+                        <AiTwotoneDelete />
+                      </button>
                     )}
                   </div>
                 </div>
                 <div className="text-base flex flex-col items-center gap-1 mb-1">
                   <p className="text-gray-500">Posted by</p>
                   <Link
-                    to={`/user-profile/${pinDetail.postedBy?._id}`}
-                    className="flex items-center gap-2 w-fit bg-gray-600 px-4 py-2 rounded-full"
+                    to={`/user-profile/${pinDetail?.postedBy?._id}`}
+                    className="flex items-center gap-2 w-fit bg-gray-600 px-4 py-2 rounded-full shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-150 "
                   >
                     <img
                       src={pinDetail.postedBy.image}
@@ -233,7 +359,7 @@ const PinDetail = ({ user }) => {
           style={{ maxHeight: "calc(100vh)" }}
         >
           <div className="mb-4 h-fit text-xl font-bold">
-            <div className="h-fit mb-2">
+            {/* <div className="h-fit mb-2">
               <div className="flex h-fit w-full items-center justify-between">
                 <div className="flex gap-2 items-center">
                   <a
@@ -258,6 +384,76 @@ const PinDetail = ({ user }) => {
                   </a>
                 )}
               </div>
+            </div> */}
+            <div className="h-fit  mb-4">
+              <div className="flex h-fit w-full items-center justify-between ">
+                {/* all user view */}
+                <div className=" w-full h-fit flex gap-2 items-center">
+                  <div className="flex gap-2 items-center">
+                    <a
+                      href={`${pinDetail.image?.asset?.url}?dl=`}
+                      download
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      className="bg-white w-10 h-10 rounded-full flex items-center justify-center text-dark text-xl opacity-90 hover:opacity-100 hover:shadow-md outline-none"
+                    >
+                      <MdDownloadForOffline />
+                    </a>
+                  </div>
+                  {/* save */}
+                  <div>
+                    {!alreadySaved ? (
+                      <button
+                        className="flex items-center justify-center  bg-highlight opacity-90 hover:opacity-100  text-white font-semibold  rounded-3xl text-center shadow-sm hover:shadow-md py-2 px-4 font-sans w-16 h-10"
+                        onClick={(e) => {
+                          savePin(pinDetail?._id);
+                        }}
+                      >
+                        {savingPost ? (
+                          <BiLoaderCircle className=" text-lg" />
+                        ) : (
+                          <p className=" text-base">Save</p>
+                        )}
+                      </button>
+                    ) : (
+                      <button
+                        className="flex items-center justify-center  bg-white  opacity-90 hover:opacity-100 text-highlight2 font-semibold text-sm  rounded-3xl text-center shadow-sm hover:shadow-md py-2 px-4 font-sans w-16 h-10"
+                        onClick={(e) => {
+                          unsavePin(pinDetail?._id);
+                        }}
+                      >
+                        {unSavingPost ? (
+                          <BiLoaderCircle className=" text-lg" />
+                        ) : (
+                          <p className=" text-base">Saved</p>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                  {pinDetail.destination && (
+                    <a
+                      href={pinDetail.destination}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-white flex items-center gap-2 font-semibold p-2 h-10  text-sm rounded-full opacity-90 hover:opacity-100 hover:shadow-md px-4 justify-self-end"
+                    >
+                      {pinDetail.destination}
+                    </a>
+                  )}
+                </div>
+                {/* same user delete pin */}
+                {user?._id === pinDetail?.postedBy?._id && (
+                  <button
+                    className=" bg-red-500 flex items-center justify-center gap-2 text-white font-semibold  text-sm  rounded-full opacity-90 hover:opacity-100 hover:shadow-md p-2 h-10 w-10"
+                    onClick={() => {
+                      deletePin(pinId);
+                    }}
+                  >
+                    <AiTwotoneDelete />
+                  </button>
+                )}
+              </div>
             </div>
             <div>
               <h1 className="text-3xl text-gray-100 mb-1">{pinDetail.title}</h1>
@@ -267,7 +463,7 @@ const PinDetail = ({ user }) => {
               <p className="text-gray-500">Posted by</p>
               <Link
                 to={`/user-profile/${pinDetail.postedBy?._id}`}
-                className="flex items-center gap-2 w-fit bg-gray-600 px-4 py-2 rounded-full"
+                className="flex items-center gap-2 w-fit bg-gray-600 px-4 py-2 rounded-full shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-150"
               >
                 <img
                   src={pinDetail.postedBy.image}

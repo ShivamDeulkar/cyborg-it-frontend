@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { AiOutlineCloudUpload } from "react-icons/ai";
+import { PiCloudWarning } from "react-icons/pi";
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
@@ -79,7 +80,13 @@ const CreatePin = ({ user }) => {
     }
   };
   return (
-    <div className="flex flex-col justify-center items-center w-full mt-5 lg:h-4/5 ">
+    <div className="flex relative flex-col justify-center items-center w-full mt-5 lg:h-4/5 ">
+      {fields && (
+        <div className=" flex gap-1 flex-col justify-center items-center absolute top-1/2 z-50 left-1/2 -translate-x-1/2 -translate-y-1/2  bg-gradient-to-br h-1/2 bg-white border-2 border-highlight  text-highlight2  px-5 py-2  mb-5 rounded-2xl transition-all duration-300  uppercase text-base shadow-2xl shadow-gray-900">
+          <PiCloudWarning className="text-3xl" />
+          <p>Please fill the required fields</p>
+        </div>
+      )}
       <form
         onSubmit={(e) => savePin(e)}
         className="flex lg:flex-row flex-col  justify-center item-center bg-gray-800 lg:p-5 p-3  w-full gap-4 "
@@ -201,11 +208,6 @@ const CreatePin = ({ user }) => {
           </div>
         </div>
       </form>
-      {fields && (
-        <p className=" bg-gradient-to-br bg-white border border-highlight  text-highlight2  px-5 py-2  mt-5  transition-all duration-150 ease-in -skew-x-12 uppercase text-base">
-          Please fill in all the fields
-        </p>
-      )}
     </div>
   );
 };
