@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { MdDownloadForOffline } from "react-icons/md";
-import { AiTwotoneDelete } from "react-icons/ai";
 import { BsFillArrowUpRightCircleFill } from "react-icons/bs";
 
 import { client, urlFor } from "../client";
@@ -14,12 +13,11 @@ const Pin = ({ pin }) => {
   const user = fetchUser();
   const [postHovered, setPostHovered] = useState(false);
   const [savingPost, setSavingPost] = useState(false);
+  const [alreadySaved, setAlreadySaved] = useState(
+    !!save?.find((item) => item.postedBy?._id === user?.sub)
+  );
   const navigate = useNavigate();
-  const alreadySaved = !!save?.filter(
-    (item) => item.postedBy?._id === user?.sub
-  )?.length;
 
-  // { pin: { postedBy, image, _id, destination, save }
   const savePin = (id) => {
     if (!alreadySaved) {
       setSavingPost(true);
@@ -39,20 +37,39 @@ const Pin = ({ pin }) => {
         ])
         .commit()
         .then(() => {
-          window.location.reload();
+          setSavingPost(false);
+          setAlreadySaved(true);
+        })
+        .catch((error) => {
+          console.error("Error while saving post:", error);
           setSavingPost(false);
         });
     }
   };
-  const deletePin = (id) => {
-    client.delete(id).then(() => {
-      window.location.reload();
-      setSavingPost(false);
-    });
+
+  const unsavePin = (id) => {
+    const indexToRemove = save.findIndex((item) => item.userId === user?.sub);
+    if (indexToRemove === -1) {
+      return;
+    }
+
+    const updatedSaveArray = save.slice();
+    updatedSaveArray.splice(indexToRemove, 1);
+
+    client
+      .patch(id)
+      .set({ save: updatedSaveArray })
+      .commit()
+      .then(() => {
+        setAlreadySaved(false);
+      })
+      .catch((error) => {
+        console.error("Error while unsaving post:", error);
+      });
   };
 
   return (
-    <div className="mx-2 my-4  overflow-hidden rounded-lg ">
+    <div className="mx-2 my-4  overflow-hidden rounded-lg">
       <div
         onMouseEnter={() => setPostHovered(true)}
         onMouseLeave={() => setPostHovered(false)}
@@ -62,8 +79,9 @@ const Pin = ({ pin }) => {
         <img
           src={urlFor(image).width(250).url()}
           alt="user-post"
-          className="  w-full"
+          className="w-full"
         />
+        {/* Rest of the JSX code... */}
         <Link
           to={`/user-profile/${postedBy?._id}`}
           className="flex justify-start gap-2 p-2 items-center absolute z-50 bottom-0 left-0 "
@@ -76,11 +94,14 @@ const Pin = ({ pin }) => {
             referrerPolicy="no-referrer"
           />
         </Link>
+        {/* Replace the Save button and Unsave button as follows */}
         {postHovered && (
           <div
-            className=" absolute top-0  w-full h-full flex flex-col justify-between p-1 pr-2 pt-2 pb-2 z-40 cursor-zoom-in"
+            className="absolute top-0 w-full h-full flex flex-col justify-between p-1 pr-2 pt-2 pb-2 z-40 cursor-zoom-in"
             style={{ height: "100%" }}
           >
+            {/* Existing code for other elements */}
+            {/* ... */}
             <div className="flex items-center justify-between">
               <div className="flex gap-2">
                 <a
@@ -94,22 +115,29 @@ const Pin = ({ pin }) => {
                   <MdDownloadForOffline />
                 </a>
               </div>
+              {/* Conditional rendering of Save button or Unsave button */}
               {alreadySaved ? (
-                <div className=" bg-white opacity-70 hover:opacity-100  text-highlight2 font-semibold  text-sm px-5 py-1 rounded-full text-center shadow-sm shadow-gray-500 hover:shadow-sm hover:shadow-gray-500 w-16 h-9 flex items-center justify-center ">
+                <div
+                  className="bg-white opacity-70 hover:opacity-100 text-highlight2 font-semibold text-sm px-5 py-1 rounded-full text-center shadow-sm shadow-gray-500 hover:shadow-sm hover:shadow-gray-500 w-16 h-9 flex items-center justify-center cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    unsavePin(_id);
+                  }}
+                >
                   <span>Saved</span>
                 </div>
               ) : (
                 <button
-                  className=" bg-highlight opacity-70 hover:opacity-100  text-white font-semibold text-sm px-5 py-1 rounded-3xl text-center shadow-sm hover:shadow-md w-16 h-9 flex items-center justify-center"
+                  className="bg-highlight opacity-70 hover:opacity-100 text-white font-semibold text-sm px-5 py-1 rounded-3xl text-center shadow-sm hover:shadow-md w-16 h-9 flex items-center justify-center"
                   onClick={(e) => {
                     e.stopPropagation();
                     savePin(_id);
                   }}
                 >
                   {savingPost ? (
-                    <BiLoaderCircle className=" text-lg" />
+                    <BiLoaderCircle className="text-lg" />
                   ) : (
-                    <p className=" text-base">Save</p>
+                    <p className="text-base">Save</p>
                   )}
                 </button>
               )}
@@ -128,17 +156,6 @@ const Pin = ({ pin }) => {
                     ? destination.slice(12, 20) + ".."
                     : destination.slice(12)}
                 </a>
-              )}
-              {postedBy?._id === user?.sub && (
-                <button
-                  className=" bg-red-500 flex items-center justify-center gap-2 text-white font-semibold  text-sm  rounded-full opacity-70 hover:opacity-100 hover:shadow-md p-2 h-9 w-9"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deletePin(_id);
-                  }}
-                >
-                  <AiTwotoneDelete />
-                </button>
               )}
             </div>
           </div>

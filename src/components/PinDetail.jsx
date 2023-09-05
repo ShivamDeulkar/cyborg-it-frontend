@@ -25,9 +25,13 @@ const PinDetail = ({ user }) => {
   const [savingPost, setSavingPost] = useState(false);
   const [unSavingPost, setUnSavingPost] = useState(false);
 
-  const alreadySaved = !!pinDetail?.save?.filter(
-    (item) => item.postedBy?._id === user?._id
-  )?.length;
+  const [alreadySaved, setAlreadySaved] = useState(
+    !!pinDetail?.save?.find((item) => item.postedBy?._id === user?._id)
+  );
+
+  // alreadySaved = !!pinDetail?.save?.filter(
+  //   (item) => item.postedBy?._id === user?._id
+  // )?.length;
 
   const savePin = () => {
     if (!alreadySaved) {
@@ -47,8 +51,8 @@ const PinDetail = ({ user }) => {
         ])
         .commit()
         .then(() => {
-          window.location.reload();
           setSavingPost(false);
+          setAlreadySaved(true);
         });
     }
   };
@@ -81,9 +85,8 @@ const PinDetail = ({ user }) => {
       .set({ save: updatedSaveArray })
       .commit()
       .then(() => {
-        window.location.reload(); // You may consider updating the state instead of reloading the page
-        // Additional code here if needed after unsave
         setUnSavingPost(false);
+        setAlreadySaved(false);
       })
       .catch((error) => {
         console.error("Error while unsaving post:", error);
